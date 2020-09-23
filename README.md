@@ -31,7 +31,13 @@ Actualizaré este documento según el calendario:
 **NOTA**
 Los demás recursos, materiales, lecturas, casos prácticos realizados en aula, se entregarán los días de impartición a través de vuestros profesores / tutores.
 
-Más dudas contactar al email [marco@neoland.es]() o al canal Slack **data-science-part-time-sept**
+Más dudas contactar a los profesores del programa:
+- Marco Russo al email [marco@neoland.es]
+- Daniel Montes al email [daniel.montes@neoland.es]
 
-Neoland Bootcamp Part-time Data Science 2020-2021 - Alumnos
+ - canal privado Slack **data-science-part-time-sept**
+
+IMPORTANTE: Si **no eres estudiante** del bootcamp puedes solicitar permisos para realizar las prácticas de los diferentes módulos, aunque no tendrás las soluciones ni tutoría, ayuda o soporte.
+
+Para más info del programa Neoland Bootcamp Part-time Data Science [https://www.neoland.es/data-science-bootcamp].
 
