@@ -32,7 +32,7 @@ Actualizaré este documento según el calendario:
 Los demás recursos, materiales, lecturas, casos prácticos realizados en aula, se entregarán los días de impartición a través de vuestros profesores / tutores.
 
 Más dudas contactar a los profesores del programa:
-- Marco Russo al email [marco@neoland.es]()
+- Marco Russo al email [marco@neoland.es]
 - Daniel Montes al email [daniel.montes@neoland.es]
 
  - canal privado Slack **data-science-part-time-sept**
