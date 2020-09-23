@@ -1,3 +1,3 @@
 # Lab GIT
 
-sept.2020
+week 2 - sept.2020
