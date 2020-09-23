@@ -1,5 +1,5 @@
 # GIT practices
-week 2 - sept.2020
+week 2 - 23 sept.2020
 
 
 ## practicas con GIT
