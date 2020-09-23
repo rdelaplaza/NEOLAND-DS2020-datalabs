@@ -1,16 +1,14 @@
-<<<<<<< Updated upstream
-# NEOLAND
-
-## Neoland Bootcamp Madrid 
+# Neoland Bootcamp Madrid 
 2da edición part-time Data Science 2020-2021
 
-Repositorio principal con los casos prácticos visto en aula y los labs para realizar en casa.
+En este repositorio tendrás acceso a las prácticas a realizar. Están organizadas por carpetas según el módulo correspondiente y la semana de impartición.
 
-### Organización de las carpetas y bajar/subir las prácticas al repositorio
-=======
-# NEOLAND_DS_2020_2021_students
+***
 
-## En este repositorio tendrás acceso a las prácticas a realizar. Están por carpetas según el módulo correspondiente y la semana de impartición.
+## Organización de las carpetas y bajar/subir las prácticas al repositorio
+
+
+
 
 ## Los ficheros serán en formato script HTML, texto, PDF, fichero R o Python, markdown o notebook de Jupyter o similares.
 
@@ -36,4 +34,4 @@ Los demás recursos, materiales, lecturas, casos prácticos realizados en aula, 
 Más dudas contactar al email [marco@neoland.es]() o al canal Slack **data-science-part-time-sept**
 
 Neoland Bootcamp Part-time Data Science 2020-2021 - Alumnos
->>>>>>> Stashed changes
+
