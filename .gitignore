@@ -370,3 +370,6 @@ venv.bak/
 
 # OSx files
 .DS_Store
+
+# Vscode directory
+.vscode/
