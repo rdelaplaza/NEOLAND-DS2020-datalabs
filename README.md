@@ -22,17 +22,18 @@ Los ficheros serán en formato script HTML, texto, fichero R o Python, markdown 
 
 Actualizaré este documento según el calendario:
 
-- [x] Fundamentos de programación general
-- [] Fundamentos de matemática y estadística
-- [] Fundamentos de RStudio
-- [] Fundamentos de Python
-- [] Avanzado de programación
-- [] Big Data ecosystem
-- [] Data Mining
-- [] Data Visualization
-- [] Machine Learning 
-- [] Deep Learning
-- [] Proyectos
+- [X] Fundamentos de programación general
+- [ ] Fundamentos de matemática y estadística
+- [ ] Fundamentos de RStudio
+- [ ] Fundamentos de Python
+- [ ] Avanzado de programación
+- [ ] Big Data ecosystem
+- [ ] Data Mining
+- [ ] Data Visualization
+- [ ] Machine Learning 
+- [ ] Deep Learning
+- [ ] Proyectos
+
 
 ***
 
