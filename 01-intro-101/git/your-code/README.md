@@ -1,5 +1,9 @@
 # GIT practices
+<<<<<<< HEAD
 week 2 - miércoles 23 sept.2020
+=======
+week 2 - 23 sept.2020
+>>>>>>> upstream/master
 
 ## MAIN TASK
 - Actualiza tu repositorio remoto sincronizado con el ORIGINAL que hiciste el fork

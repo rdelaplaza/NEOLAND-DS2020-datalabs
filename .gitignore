@@ -366,3 +366,10 @@ venv.bak/
 
 # mkdocs documentation
 /site
+
+
+# OSx files
+.DS_Store
+
+# Vscode directory
+.vscode/
