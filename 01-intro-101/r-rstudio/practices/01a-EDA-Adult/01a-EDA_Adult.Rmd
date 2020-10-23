@@ -43,7 +43,7 @@ filas= nrow(datosAdult)
 E18=c(" Preschool"," 1st-4th"," 5th-6th"," 7th-8th"," 9th"," 10th" ," 11th"," 12th")
 E912=c(" HS-grad"," Some-college"," Assoc-acdm"," Assoc-voc")
 E1316=c(" Bachelors"," Masters" ," Prof-school"," Doctorate")
- for (i in filas){
+ for (i in 1:filas){
 if (datosAdult$education[i] %in% E18){
   datosAdult$education[i]= "E18"
 } else if(datosAdult$education[i] %in% E912){
