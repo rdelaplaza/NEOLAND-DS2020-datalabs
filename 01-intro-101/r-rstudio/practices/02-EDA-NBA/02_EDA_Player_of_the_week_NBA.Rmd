@@ -103,8 +103,8 @@ row.names(nba)
 ```
 
 # 3.Preparación de la base de datos
-## 3.1 Asignar NA a los valores ausentes en los datos de Conference.
-```{r}
+## 3.1 Asignar NA a los valores ausentes en los datos de `Conference`.
+```{r}`
 levels(nba$Conference)
 ```
 
@@ -117,7 +117,7 @@ conf<-(nba$Conference)
 conf
 ```
 
-*Asignar NA a los valores ausentes en los datos de Conference.*
+*Asignar NA a los valores ausentes en los datos de `Conference`.*
 ```{r}
 conf[conf == ""] <- NA
 ```
@@ -287,6 +287,10 @@ Además con el summary se pueden observar los siguientes cambios:
 ```{r}
 
 ```
+
+-----NO REALIZAR ESTE APARTADO ------
+
+
 
 
 # 8 Preparación de datos para la minería de datos
