@@ -1,7 +1,7 @@
 ---
-title: 'Minería de datos: PEC1'
+title: 'Minería de datos: mod01'
 author: "Autor: Nombre estudiante"
-date: "Octubre 2019"
+date: "noviembre 2020"
 output:
   html_document:
     highlight: default
@@ -9,8 +9,6 @@ output:
     theme: cosmo
     toc: yes
     toc_depth: 2
-    includes:
-      in_header: 75.584-PEC-header.html
   pdf_document:
     highlight: zenburn
     toc: yes
@@ -24,64 +22,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ******
 # Introducción
 ******
-## Presentación
-Esta prueba de evaluación continuada cubre el módulo 1,2 y 8 del programa de la asignatura.  
 
-## Competencias
-Las competencias que se trabajan en esta prueba son:
-
-* Uso y aplicación de las TIC en el ámbito académico y profesional
-* Capacidad para innovar y generar nuevas ideas.
-* Capacidad para evaluar soluciones tecnológicas y elaborar propuestas de proyectos teniendo en cuenta los recursos, las alternativas disponibles y las condiciones de mercado.
-* Conocer las tecnologías de comunicaciones actuales y emergentes, así como saberlas aplicar convenientemente para diseñar y desarrollar soluciones basadas en sistemas y tecnologías de la información.
-* Aplicación de las técnicas específicas de ingeniería del software en las diferentes etapas del ciclo de vida de un proyecto.
-* Capacidad para aplicar las técnicas específicas de tratamiento, almacenamiento y administración de datos.
-* Capacidad para proponer y evaluar diferentes alternativas tecnológicas para resolver un problema concreto.
-* Capacidad de utilizar un lenguaje de programación.  
-* Capacidad para desarrollar en una herramienta IDE.  
-* Capacidad de plantear un proyecto de minería de datos.  
-
-## Objetivos
-* Asimilar correctamente el módulo 1 y 2.
-*	Qué es y qué no es MD.
-*	Ciclo de vida de los proyectos de MD.
-*	Diferentes tipologías de MD.
-* Conocer las técnicas propias de una fase de preparación de datos y objetivos a alcanzar.  
-
-## Descripción de la PEC a realizar
+## Descripción de la PRÁCTICA a realizar
 La prueba está estructurada en 1 ejercicio teórico/práctico y 1 ejercicio práctico que pide que se desarrolle la fase de preparación en un juego de datos.  
-Deben responderse todos los ejercicios para poder superar la PEC.  
+Deben responderse todos los ejercicios para poder superar la PRA.  
 
 ## Recursos
 Para realizar esta práctica recomendamos la lectura de los siguientes documentos:  
 
-* Módulo 1, 2 y 8 del material didáctico.  
 * RStudio Cheat Sheet: Disponible en el aula Laboratorio de Minería de datos.  
 * R Base Cheat Sheet: Disponible en el aula Laboratorio de Minería de datos.  
 
-## Criterios de evaluación
-**Ejercicios teóricos**  
-Todos los ejercicios deben ser presentados de forma razonada y clara, especificando todos y cada uno de los pasos que se hayan llevado a cabo para su resolución. No se aceptará ninguna respuesta que no esté claramente justificada.  
-
-**Ejercicios prácticos**  
-Para todas las PEC es necesario documentar en cada apartado del ejercicio práctico qué se ha hecho y cómo se ha hecho.  
-
-## Formato y fecha de entega
-El formato de entrega es: usernameestudiant-PECn.html y rmd  
-Fecha de Entrega: 30/10/2019  
-Se debe entregar la PEC en el buzón de entregas del aula  
-
-
-## Nota: Propiedad intelectual 
-
-> A menudo es inevitable, al producir una obra multimedia, hacer uso de recursos creados por terceras personas. Es por lo tanto comprensible hacerlo en el marco de una práctica de los estudios de Informática, Multimedia y Telecomunicación de la UOC, siempre y cuando esto se documente claramente y no suponga plagio en la práctica. 
-
-> Por lo tanto, al presentar una práctica que haga uso de recursos ajenos, se debe presentar junto con ella un documento en qué se detallen todos ellos, especificando el nombre de cada recurso, su autor, el lugar dónde se obtuvo y su estatus legal: si la obra está protegida por el copyright o se acoge a alguna otra licencia de uso (Creative Commons, licencia GNU, GPL ...). 
-El estudiante deberá asegurarse de que la licencia  no impide específicamente su uso en el marco de la práctica. En caso de no encontrar la información correspondiente tendrá que asumir que la obra está protegida por copyright. 
-
-> Deberéis, además, adjuntar los ficheros originales cuando las obras utilizadas sean digitales, y su código fuente si corresponde.  
-
-******
+*****
 # Enunciado  
 ******
 Como ejemplo, trabajaremos con el conjunto de datos "Titanic" que recoge datos sobre el famoso crucero y sobre el que es fácil realizar tareas de clasificación predictiva sobre la variable "Survived".   
@@ -258,3 +210,4 @@ names(datosAdult) <- c("age","workclass","fnlwgt","education","education-num","m
 
 
 ```
+
