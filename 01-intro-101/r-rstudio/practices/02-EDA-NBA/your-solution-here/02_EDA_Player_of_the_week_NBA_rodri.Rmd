@@ -1,0 +1,609 @@
+---
+title: "Lectura y preparación de datos para Data Mining"
+author: "nombre_apellidos_estudiante - NEOLAND"
+date: sys.date
+output: 
+  html_document: 
+    highlight: tango
+    theme: spacelab
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# NBA player of the week
+
+
+# Descripción y enunciado
+El objetivo de esta actividad es la gestión y preparación de datos. La gestión de datos es una parte muy importante de cualquier proceso de minería de datos, ya que los datos se deben preparar y preprocesar antes de iniciar el proceso de extracción de conocimiento.
+Esta tarea ilustra algunos de los procedimientos básicos con los que nos podemos encontrar para preparar los datos: analizar los tipos de datos, tranformar valores, detectar e eliminar outliers, hacer un muestreo, etcétera.
+
+# Fichero de datos
+El conjunto de datos con el que trabajaremos en esta actividad surge de la bases de datos disponibles en Kaggle . En concreto, los datos corresponden a los jugadores nombrados jugadores de la semana desde la temporada 1984-1985 hasta la temporada 2017-2018. Estos datos nos ofrecen múltiples posibilidades para consolidar los conocimientos y competencias de manipulación de datos, preprocesado y análisis descriptivo. El fichero `NBA_player_of_the_week.csv` se encuentra adjunto.
+
+
+# Ingesta de datos
+Actualmente el fichero se encuentra en la misma carpeta de datos RMD, está en adjunto. Se enviará nueva práctica similar con los datos de ingesta a través de scraping / API / base de datos para R y Python.
+
+
+# Valoraciones
+- se valorarán los trabajos por los detalles, no vale con el solo enviar un trozo de código, sino la explicación es fundamental
+- explicar además los resumen de cada sección (carga, preparación, EDA, limpieza, nuevos atributos, discretización, split train-test)
+- conclusiones y comparativas son los más importantes para comenzar con Data Mining.
+
+**Diciembre 2019**
+1 Cargar un juego de datos
+1.1 Leer el fichero de datos “housePrices.txt”
+2 Consulta de los datos cargados
+2.1 Consulta de las etiquetas de los datos
+2.2 Consulta de datos
+3 Preparación de los datos
+3.1 Cambiamos los identificadores de filas y columnas
+3.2 Filtramos los datos
+3.3 Modificamos el contenido de los datos
+4 Split Train-Test
+4.1 Generamos dos conjuntos de datos train y test
+4.2 Guardamos los ficheros train y test en formato .csv
+
+Para resolver la actividad, deberéis usar algunos comandos de R que quizás no os resulten demasiado familiares y que recomendamos que investiguéis. Estos son:
+  
+* levels
+* summary
+* order/sort
+* trimws
+* sub
+* table
+* ifelse
+
+
+## 1 Cargar un juego de datos
+*Leer el fichero de datos “NBA_player_of_the_week.csv” y guardar los datos en un objeto con identificador denominado nba.*
+
+Hacemos uso de la herramienta 'setwd' para conocer la ruta en la que se encuentra el archivo con los datos que vamos a analizar:
+
+```{r}
+
+nba<-read.csv("~/GitHub/NEOLAND-DS2020-datalabs/NEOLAND-DS2020-datalabs/01-intro-101/r-rstudio/practices/02-EDA-NBA/NBA_player_of_the_week.csv",header = TRUE)
+
+```
+
+Instalamos las librerías:
+
+```{r}
+
+library(ggplot2)
+
+library(dplyr)
+
+
+```
+
+
+## 2 Descripción de los datos
+*Describir brevemente la estructura de los datos: qué tipo de datos contiene, número de filas y columnas y nombre de las columnas. Realizar un resumen descriptivo de los datos.*
+
+### tipo de dato con class()
+```{r}
+class(nba)
+```
+En primer lugar podemos observar que se trata de un 'data frame' de 1145 filas y 13 columnas. Por otro lado, nos aporta información de los jugadores de la semana de la NBA en cuanto a su edad, conferencia en la que juega su equipo (en este caso, aunque sea un dato en blanco, se puede deducir a partir de la franquicia en la que juegan), fecha en la que fueron nombrados "jugador de la semana", año en el que fueron drafteados, altura en el sistema imperial, su nombre, la posición en la que juegan, temporada regular, temporada en play-offs, temporadas jugadas en la NBA, equipo para el que juegan o el peso.En cuanto al atributo 'Real_value', se trata de si el premio al jugador de la semana se otorga a un único jugador (1), o es un premio compartido entre los dos mejores jugadores (0.5), uno por cada conferencia (East/West). 
+
+### tipo de estructura
+```{r}
+str(nba)
+```
+En cuanto a la estructura de los datos, son valores int (integer), chr (character) y num (numeric).
+
+
+### head() es resumen de los 6 primeros resultados
+```{r}
+head(nba)
+```
+Con los primeros 6 resultados podemos hacernos una idea aproximada de nuestro dataset. En este caso se trata de los jugadores de la semana entre los meses de marzo y abril de 1985. Así, de primeras, podemos observar que nuestro dataset no está ordenado por orden cronológico.
+
+### con ls() extraemos el listado de las variables (columnas)
+```{r}
+ls(nba)
+```
+Observamos el listado de las 13 variables (columnas) presentes en nuestro dataset. En este caso obtenemos el listado de valores por orden alfabético.
+
+### usando names() también extraemos las etiquetas de las columnas
+```{r}
+names(nba)
+```
+En este caso el listado de columnas está ordenado tal y como aparece en el dataset.
+
+### extraemos las etiquetas de las filas con row.names() o rownames()
+```{r}
+row.names(nba)
+```
+El nombre de las filas se puede considerar como el índice de las mismas. En este caso no tiene una "etiqueta" como tal, como en el caso de las columnas. El dato más representativo de cada fila se podría considerar el nombre del propio jugador (Player).  
+
+
+# 3.Preparación de la base de datos
+## 3.1 Asignar NA a los valores ausentes en los datos de `Conference`.
+
+```{r}
+levels(nba$Conference)
+```
+Vemos que, en el caso del atributo 'Conference', la función levels() no nos aporta nada al no tratarse de una variable categórica. Debemos factorizar la lista para que podamos obtener sus niveles.
+
+
+*creamos una lista conf*
+```{r}
+conf<-(nba$Conference)
+```
+
+```{r}
+conf
+```
+Podemos observar en la lista creada que la división de la NBA en conferencias no existía desde 1984, si no que aparece en algún momento entre los años 1985 y 2018. Por ello, vamos a sustituir los valores vacíos de los primeros añor por NA.
+
+Antes de esto, haremos una copia de seguridad de nuestro dataset por si incurrimos en algún error durente este proceso, que tengamos la posibilidad de volver sobre los datos originales.
+
+*Crear copia de seguridad del dataset*
+```{r}
+nba_bak <- nba
+```
+
+*Asignar NA a los valores ausentes en los datos de `Conference`.*
+```{r}
+conf[conf == ""] <- NA
+```
+
+
+*comprobaremos los nuevos datos asignados*
+```{r}
+str(conf)
+```
+Podemos observar que la sustitución de datos por NA se ha realizado correctamente.
+
+## 3.2 Transformar los datos de Conference en variable categórica y mostrar la tabla de frecuencia.
+```{r}
+
+conf <- factor(conf)
+
+levels(conf)
+
+table(conf)
+
+```
+Una vez factorizada la lista, es posible conocer los niveles de la lista: en este caso se trata de las conferencias East y West.
+
+La tabla de frecuencia nos muestra precisamente la "frecuencia" con la que aparecen estos valores en nuestra lista, 381 en el caso de East y 380 en el caso de West.
+
+## 3.3 Comprobar que la variable tiene xxx valores ausentes
+```{r}
+
+table(conf, exclude = NULL)
+
+```
+
+Para conocer los valores ausentes, repetimos la tabla de frecuencia pero sin excluir nada de la lista (valores NA). Por ello, podemos observar directamente que la variable tiene 384 valores ausentes.
+
+*Incluimos los datos tratados en forma de lista en la columna correspondiente de nuestro dataset*
+```{r}
+
+nba$Conference <- conf
+
+```
+
+## 3.4 Transformar las variables Height, Player, Position, Season, Team y Weight en variables categóricas.
+```{r}
+
+nba$Height <- factor(nba$Height)
+nba$Player <- factor(nba$Player)
+nba$Position <- factor(nba$Position)
+nba$Season <- factor(nba$Season)
+nba$Team <- factor(nba$Team)
+nba$Weight <- factor(nba$Weight)
+
+```
+
+Hemos factoriazado, como en el caso anterior de 'Conference', cada una de las variables para que se conviertan en variables categóricas.
+
+
+## 3.5 Comprobar que estas variables no tienen valores perdidos.
+```{r}
+
+colSums(is.na(nba))
+
+```
+Sumamos los valores "NA" para cerciorarnos de que, efectivamente, no existen valores perdidos en las variables en estudio.
+
+## 3.6 Calcular el número de anyos que pasan entre que salio el jugador elegido en el draft y la temporada en la que fue jugador de la semana. Denomina la variable tiempo.
+```{r}
+tiempo <- nba$Season.short - nba$Draft.Year
+
+nba <- cbind(nba,tiempo)
+
+```
+
+En primer lugar hemos creado una lista con los datos obtenidos de restar al dato de la temporada en la que el jugador es elegido jugador de la semana (Season.short) menos el año en el que fue drafteado (Draft.Year).
+
+Después añadimos esta lista como variable a nuestro dataset mediante la función cbind().
+
+## 3.7 ¿Cual es el número de años que más veces se repite entre que salen elegidos en el draft y se proclaman mejores jugadores? (moda de la variable tiempo)
+```{r}
+
+summary(nba$tiempo)
+
+# Instalamos el paquete "modeest" que vamos a utilizar para obtener la moda de la variable tiempo
+
+install.packages("modeest")
+
+library(modeest)
+
+mfv(nba$tiempo) #Indica los valores con más frecuencia
+
+```
+Siete años es el número de años que más veces se repite entre que salen elegidos en el draft y se proclaman mejores jugadores.
+
+
+## 3.8 La altura de los jugadores está expresada en pies (aquellas con guión) y cm. Convertir la altura expresada en pies a centimetros [https://www.piesametros.info/](https://www.piesametros.info/). Posteriormente, eliminar el texto “cm” de los datos de tipo altura y convertir la variable en numérica. Calcular media, desviación típica y boxplot.
+```{r}
+
+# Como la altura ahora mismo es un factor, lo volvemos a cambiar a su estado inicial: 'character'.
+
+nba$Height <- as.character(nba$Height)
+
+
+# Utilizamos un bucle FOR...LOOP para diferenciar las alturas que están expresadas en cm de las que están en pies y pulgadas.
+
+# Las que están en 'cm', nos quedamos solo con el número y las que tienen un '-' (pies y pulgadas), las pasamos a 'cm':
+
+for (i in 1:nrow(nba)){
+  if (grepl('cm', nba$Height[i])){
+    nba$Height[i] = sub('cm', '', nba$Height[i])
+  } else if (grepl('-', nba$Height[i])){
+    division = strsplit(nba$Height[i],"-")[[1]]
+    nba$Height[i] = as.integer(division[1])*30.48 + as.integer(division[2])*2.54
+  }
+}
+
+?grepl
+?sub
+?trimws
+?strsplit
+
+
+# Como la altura ahora mismo es un 'character', lo volvemos a cambiar a número para poder operar con él.
+
+nba$Height <- as.integer(nba$Height)
+
+
+# Calculamos la media, desviación típica y boxplot.
+
+mean(nba$Height)
+
+sd(nba$Height)
+
+boxplot(nba$Heigh)
+
+```
+Podemos observar que no existen valores atípicos en el gráfico 'boxplot'.
+
+
+### 3.9
+El peso de los jugadores está expresada en libras y kg. Convertir el peso expresado en kgs en libras [https://www.metric-conversions.org/es/peso/kilogramos-a-libras.htm](https://www.metric-conversions.org/es/peso/kilogramos-a-libras.htm). Convertir la variable en numérica.Calcular media, desviación típica y boxplot.
+
+
+
+```{r}
+
+nba<-read.csv("~/GitHub/NEOLAND-DS2020-datalabs/NEOLAND-DS2020-datalabs/01-intro-101/r-rstudio/practices/02-EDA-NBA/NBA_player_of_the_week.csv",header = TRUE)
+
+# Como el peso ahora mismo es un factor, lo volvemos a cambiar a su estado inicial: 'character'.
+
+nba$Weight <- as.character(nba$Height)
+
+
+# Utilizamos un bucle FOR...LOOP para diferenciar los pesos que están en kg de los que están en libras.
+
+# Las que están en 'kg', nos quedamos solo con el número y los que están en libras los pasamos a 'kg':
+
+for (i in 1:nrow(nba)){
+  if (grepl('kg', nba$Weight[i])){
+    nba$Weight[i] = sub('kg', '', nba$Weight[i])
+  } else {
+    nba$Weight[i] = as.integer(nba$Weight[i])*0.453592
+  }
+}
+
+
+# Como la altura ahora mismo es un 'character', lo volvemos a cambiar a número para poder operar con él.
+
+nba$Weight <- as.integer(nba$Weight)
+
+
+# Calculamos la media, desviación típica y boxplot.
+
+
+mean(nba$Weight)
+
+sd(nba$Weight)
+
+boxplot(nba$Weight)
+
+```
+Podemos observar la existencia de un valor atípico en el gráfico 'boxplot'.
+
+# 4 Información sobre posiciones en el campo y equipos.
+## 4.1 Fusionar las categorias de posición en el campo F,F-C y FC en la categoría genérica Forward. Fusionar las categorias G,G-F y GF en la categoria genérica Guard. Renombrar la categoría ‘PG’ como ‘Point Guard’, ‘SG’ como ‘Shooting Guard’, ‘SF’ como ‘Small Forward’, ‘PF’ como ‘Power Forward’ y ‘C’ como ‘Center’.
+```{r}
+# Aquellos valores que son "1 a 1" los sustituimos de forma directa:
+
+nba$Position[nba$Position == "PG"] <- "Point Guard"
+nba$Position[nba$Position == "SG"] <- "Shooting Guard"
+nba$Position[nba$Position == "SF"] <- "Small Forward"
+nba$Position[nba$Position == "PF"] <- "Power Forward"
+nba$Position[nba$Position == "C"] <- "Center"
+
+
+# Para aquellos casos en los que es necesarios fusionar varios valores, utilizamos un for...loop:
+
+filas= nrow(nba)
+forward = c("F","F-C","FC")
+guard = c("G","G-F","GF")
+
+for (i in 1:filas){
+if (nba$Position[i] %in% forward){
+  nba$Position[i]= "Forward"
+} else if (nba$Position[i] %in% guard){
+  nba$Position[i]= "Guard"
+}
+}
+
+```
+
+
+## 4.2 ¿En que posición ha sido más veces los jugadores de la semana nombrados?
+```{r}
+
+table(nba$Position)
+
+```
+Los jugadores de la semana han sido más veces nombrados en la posición de "Guard": 228 ocasiones.
+
+## 4.3 ¿Cuántos equipos distintos hay?
+```{r}
+
+equipos <- unique(nba$Team)
+
+length(equipos)
+
+```
+En el dataset "nba" hay 35 equipos distintos.
+
+
+## 4.4 ¿Cuáles son los cinco equipos que más veces han sido nombrados sus jugadores como jugador de la semana?
+```{r}
+equipos_ordenados <- sort(table(nba$Team), decreasing = TRUE) [1:5]
+
+equipos_ordenados
+
+```
+De estos 35 equipos, los cinco que más veces han sido nombrados sus jugadores como jugador de la semana son Los Angeles Lakers, San Antonio Spurs, Cleveland Cavaliers, Miami Heat y Houston Rockets, por este orden.
+
+
+# 5 Información sobre jugadores. Estadísticos descriptivos.
+## 5.1 Crear una base datos denominada nba.unique en la que no se repita el nombre de ningún jugador.Trabajar a partir de ahora con esta base de datos.
+```{r}
+
+nba.unique <- nba %>% distinct(Player, .keep_all = TRUE)
+
+?distinct
+
+```
+Seleccionamos solamente aquellas líneas que son diferentes de nuestro dataset. Nuestra nueva base de datos se compone ahora solamente de 274 observaciones (jugadores que han sido nombrados jugador de la semana al menos 1 vez desde la temporada 1984-1985 hasta la temporada 2017-2018).
+
+## 5.2 Listar el nombre de los 10 jugadores más bajos que han sido nombrados alguna vez jugadores de la semana. No debe repetirse ningún nombre.
+```{r}
+
+jugadores_mas_bajos <- nba.unique[order(nba.unique$Height, decreasing = FALSE)[1:10],6]
+jugadores_mas_bajos
+
+```
+Generamos el listado de los 10 jugadores más bajos que han sido nombrados alguna vez jugadore de la semana a partir del dataset creado anteriormente ('nba.unique'), de forma que nos aseguramos que no se repite ningún nombre.
+
+## 5.3 Listar el nombre de los 10 jugadores más altos que han sido nombrados y mostrar su altura. No debe repetirse ningún nombre.
+```{r}
+
+jugadores_mas_altos <- nba.unique[order(nba.unique$Height, decreasing = TRUE)[1:10],6:5]
+jugadores_mas_altos
+
+```
+Como en este caso se trata de los jugadores más altos, invertimos el orden activando el valor 'decreciente' de nuestra función. Al solicitar el enunciado, además, que se muestre la altura de los jugadores, en lugar de un listado de nombres, generamos un nuevo dataset que incluya la columna 'Height'.
+
+# 6 Eliminación de outliers.
+## 6.1 Eliminar los outliers de la variable peso (Weight) y guardar en un data frame nba.avg
+```{r}
+
+# Definimos como valores atípicos aquellos que se quedan "fuera" del gráfico de nuestro dataset. En este caso trabajamos con el dataset "nba.unique".
+
+valores_atipicos <- boxplot(nba.unique$Weight)$out
+valores_atipicos
+
+# Generamos un nuevo dataset eliminando los valores atípicos detectados en el paso anterior.
+
+nba.avg <- nba.unique[-which(nba.unique$Weight %in% valores_atipicos),]
+head(nba.avg)
+
+```
+
+Podemos observar cómo nuestro dataset a pasado de tener 274 variables a 272, al haber eliminado dos valores atípicos en base a los resultados visualizados. 
+
+## 6.2 Comparar los boxplots de los datos originales en nba.unique y de los datos del peso de nba.avg
+```{r}
+
+boxplot(nba.unique$Weight)
+boxplot(nba.avg$Weight)
+
+```
+Podemos observar claramente, de forma más visual, cómo desaparecen los valores atípicos mencionados anteriormente.
+
+
+## 6.3 Interpretar los resultados
+```{r}
+
+# Visualizamos los datos relativos a los valores atípicos generando un nuevo 'subset' de nuestro dataset:
+
+datos_valores_atipicos <- subset(nba.unique, nba.unique$Weight > 309)
+
+
+# Visualizamos el resumen de los datos de cada uno de los dataset cuyos datos queremos interpretar mediante la función 'summary':
+
+summary(nba.unique$Weight)
+summary(nba.avg$Weight)
+
+```
+
+Con la eliminación de los valores atípicos con índices 84 y 155, con los pesos respetivos 325 y 310, se han reducido el numero de elementos en el segundo dataframe nba.avg. Los elementos se han reducido de 274 a 272.
+
+Además, con el summary se pueden observar los siguientes cambios:
+
+- Valor Max de 325.0 a 307.0
+- la media de 219.1 a 218.3
+- el 1er y 3er cuartil, la mediana y el min han quedado invariados
+
+
+# 7 Clasificación de jugadores
+## 7.1 Añadir una columna al conjunto de datos denominada “Altura” que contenga los valores: {“bajo”, “normal”, “alto”}. La asignación del valor depende de la altura de cada jugador. Se asigna:
+- bajo: los 50 jugadores más bajos
+- alto: los 50 jugadores más altos
+- normal: el resto de jugadores
+
+```{r}
+
+# Añadimos una nueva columna a nuestro dataset 'nba.unique' considerando a todos los jugadores como normales:
+
+nba.unique$Altura <- 'normal'
+
+
+# Comprobamos que ha funcionado correctamente con un 'table' del nuevo atributo:
+
+table (nba.unique$Altura)
+
+
+# Seleccionamos los cincuenta jugadores más bajos y más altos, respectivamente:
+
+cincuenta_jugadores_mas_altos <- order(nba.unique$Height, decreasing = TRUE)[1:50]
+
+cincuenta_jugadores_mas_bajos <- order(nba.unique$Height, decreasing = FALSE)[1:50]
+
+
+# Asignamos los valores de 'bajo' y 'alto' a estos conjuntos de jugadores:
+
+nba.unique$Altura[cincuenta_jugadores_mas_bajos] = 'bajo'
+
+nba.unique$Altura[cincuenta_jugadores_mas_altos] = 'alto'
+
+
+# Utilizamos la función 'table' de este nuevo atributo para comprobar que ha funcionado de forma correcta la asignación:
+
+table (nba.unique$Altura)
+
+```
+Podemos observar que la asignación de valores ha funcionado de forma correcta.
+
+
+## 7.2 Añadir una columna al conjunto de datos denominada “Peso” que contenga los valores: {“bajo”, “normal”, “alto”}. La asignación del valor depende del peso de cada jugador. Se asigna:
+- bajo: los 50 jugadores con menor peso
+- alto: los 50 jugadores con mayor peso
+- normal: el resto de jugadores
+
+```{r}
+
+# Teniendo en cuenta el enunciado, vamos a repetir los pasos de apartado anterior, para una nueva variable: 'Peso'. Añadimos una nueva columna a nuestro dataset 'nba.unique' considerando a todos los jugadores como normales:
+
+nba.unique$Peso <- 'normal'
+
+
+# Comprobamos que ha funcionado correctamente con un 'table' del nuevo atributo:
+
+table (nba.unique$Peso)
+
+
+# Seleccionamos los cincuenta jugadores con menor y mayor peso, respectivamente:
+
+cincuenta_jugadores_menor_peso <- order(nba.unique$Weight, decreasing = FALSE)[1:50]
+
+cincuenta_jugadores_mayor_peso <- order(nba.unique$Weight, decreasing = TRUE)[1:50]
+
+
+# Asignamos los valores de 'bajo' y 'alto' a estos conjuntos de jugadores:
+
+nba.unique$Peso[cincuenta_jugadores_menor_peso] = 'bajo'
+
+nba.unique$Peso[cincuenta_jugadores_mayor_peso] = 'alto'
+
+
+# Utilizamos la función 'table' de este nuevo atributo para comprobar que ha funcionado de forma correcta la asignación:
+
+table (nba.unique$Peso)
+
+```
+Podemos observar que la asignación de valores ha funcionado de forma correcta.
+
+
+## 7.3 Calcular la media y desviación típica del peso (Weight) según la clasificación de altura de los jugadores.
+```{r}
+
+# Calculamos la media del peso (Weight) según la clasificación de altura de los jugadores:
+
+media_peso <- group_by(nba.unique, nba.unique$Altura) %>% summarise(mean(Weight))
+
+?summarise
+?group_by
+
+# Calculamos la desviación típica del peso (Weight) según la clasificación de altura de los jugadores:
+
+desv_tipica_peso <- group_by(nba.unique, nba.unique$Altura) %>% summarise(sd(Weight))
+
+?sd
+
+```
+
+
+## 7.4 Realizar un boxplot del peso (Weight) según la clasificación de altura del jugador. Los boxplots deben estar ordenados de menos a mayor altura.
+```{r}
+
+# Primero realizamos la factorización del atributo para que no se vean todos los gráficos en 'gris':
+
+nba.unique$Altura = as.factor(nba.unique$Altura)
+
+
+# Después visualizamos los datos en forma de 'boxplot' utilizando las funciones de la librería 'ggplot2' que instalamos al inicio del ejercicio:
+
+ggplot(data = nba.unique,
+    aes(x = Altura, y = Weight, fill = Altura)) +
+    geom_boxplot() +
+    ggtitle("Peso segun altura del jugador") +
+    xlab("Altura") +
+    ylab("Peso")
+
+```
+Podemos observar que existe claramente una correlación entre el peso y la altura de los jugadores, lo que entra dentro de la lógica. Podemos observa, además, que existen valores atípicos tanto por encima como, en el caso de los jugadores más bajos, por debajo. Sería conveniente hacer una limpieza de estos valores para obtener unos resultados más consolidados.
+
+## 7.5 Hacer un listado con el nombre de jugadores que tienen una altura ‘normal’ y un peso ‘alto’. Ordenar alfabéticamente por nombre.
+```{r}
+
+# Creamos el 'subset' de los jugadores con altura 'normal':
+
+subset(nba.unique, nba.unique$Altura == 'normal')
+
+
+# Creamos el 'subset' de los jugadores con peso 'alto':
+
+subset(nba.unique, nba.unique$Peso == 'alto')
+
+
+# Combinamos ambos conjuntos:
+
+subset(nba.unique, nba.unique$Altura == 'normal' & nba.unique$Peso == 'alto')
+
+```
+Existen 22 casos en los que se dan estas dos circunstancias de forma coincidente.
+

@@ -1,0 +1,404 @@
+---
+title: "08_EDA_AdultCensus"
+author: "nombre - apellido - Bootcamp NEOLAND"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document: 
+    highlight: tango
+    theme: spacelab
+    toc: yes
+---
+
+Basado en la última práctica EDA Titanic en R Studio (el fichero original así como el fichero HTML se encuentra en Google Drive), deben realizar una EDA completo para este dataset:
+
+https://archive.ics.uci.edu/ml/datasets/adult
+
+**IMPORTANTE**:
+Los pasos a realizar son:
+- [ ] exploración
+- [ ] limpieza
+- [ ] discretización
+
+
+Cargamos las librerias:
+
+```{r}
+library(ggplot2)
+
+```
+
+```{r}
+install.packages("dplyr")
+
+library(dplyr)
+
+```
+
+Intentar crear el output de salida en formato HTML (buscar info de `knit` y sus dependencias)
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Cargamos el juego de datos
+datosAdult <- read.csv('http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data',stringsAsFactors = FALSE, header = FALSE)
+
+# Nombres de los atributos
+names(datosAdult) <- c("age","workclass","fnlwgt","education","education-num","marital-status","occupation","relationship","race","sex","capital-gain","capital-loss","hour-per-week","native-country","income")
+```
+
+
+Observamos las dimensiones del dataset
+
+```{r}
+
+dim(datosAdult)
+
+```
+Se trata de un dataset de 32561 observaciones y 15 variables
+
+
+Extraemos las 10 primeras observaciones de 7 columnas
+
+```{r}
+
+head(datosAdult[1:7], n = 10)
+
+```
+
+```{r}
+
+# Comprobamos el tipo del dataset
+
+typeof(datosAdult)
+is.data.frame(datosAdult)
+
+```
+Como podemos observar, se trata de un datasat, pero el "tipo" es una lista.
+
+
+```{r}
+
+# Extraemos la estructura del dataset
+
+str(datosAdult)
+
+```
+
+
+
+```{r}
+
+# Trabajamos los atributos con valores vacios
+
+is.na(datosAdult$age[1:10])
+
+
+# Sumamos los valores "NA"
+
+colSums(is.na(datosAdult))
+
+```
+En este caso, podemos observar que no existen valores "NA" (valores vacíos)
+
+
+
+```{r}
+
+# Tabla de frecuencia del atributo "age"
+
+table(datosAdult$age)
+
+```
+Podemos observar como las edades mas representadas en nuestro dataset se encuantran entre los 18 y 51 años, decreciendo en numero hasta los 90. Esta edad (90) tiene una representacion elevada en comparacion con sus predecesoras.
+
+
+
+```{r}
+
+# Tabla de frecuencia del resto de atributos
+
+table(datosAdult$workclass)
+table(datosAdult$fnlwgt)
+table(datosAdult$education)
+table(datosAdult$`education-num`)
+table(datosAdult$`marital-status`)
+table(datosAdult$occupation)
+table(datosAdult$relationship)
+table(datosAdult$race)
+table(datosAdult$`capital-gain`)
+table(datosAdult$`capital-loss`)
+table(datosAdult$`hour-per-week`)
+table(datosAdult$`native-country`)
+table(datosAdult$income)
+```
+Podemos observar que el existen valores catalocados como "?", que debemos imputar.
+
+
+```{r}
+
+# Resumen completo del dataset
+
+summary(datosAdult)
+
+```
+```{r}
+
+# Resumen de una columna concreta
+
+summary(datosAdult$age)
+
+```
+Observamos valores como las edades minima o maxima, ademas de la media o la mediana del atributo "age" del dataset.
+
+
+```{r}
+
+# Suma de los valores que son interrogante ("?")
+
+colSums(datosAdult == " ?")
+
+```
+```{r}
+
+# Realizamos un backup del dataset, por si fuera necesario restaurarlo, antes de discretizar los atributos con valores vacíos
+
+datosAdultBAK <- datosAdult
+
+```
+
+
+```{r}
+
+# Observamos los valores absolutos y relativos del atributo 'workclass'
+
+table(datosAdult$workclass)
+
+round(prop.table(table(datosAdult$workclass)),4)*100
+
+
+# Lo visulizamos también como un histograma:
+
+hist(table(datosAdult$workclass))
+
+
+# Imputamos los valores vacíos a 'Private'
+
+attach(datosAdult)
+
+workclass[workclass == ' ?'] <-'Private'
+
+table(workclass)
+
+detach(datosAdult)
+
+```
+Podemos observar cómo ya no existen valores vacíos, que han sido asignados a 'Private'.
+
+
+```{r}
+
+# Repetimos el proceso para los otros atributos que tienen valores '?': 'occupation'
+
+attach(datosAdult)
+
+table(occupation)
+round(prop.table(table(occupation)),4)
+hist(table(occupation))
+
+detach(datosAdult)
+
+```
+No tengo claro a qué valores debería imputar los valores vacíos o nulos ('?') del atributo 'occupation'.
+
+```{r}
+
+# Repetimos el proceso para los otros atributos que tienen valores '?': 'native-country'
+
+attach(datosAdult)
+
+table(`native-country`)
+round(prop.table(table(`native-country`)),4)
+hist(table(`native-country`))
+
+# Imputamos los valores vacíos a 'United-States', puesto que representa el porcentaje más elevado con una notable diferencia
+
+`native-country`[`native-country` == " ?"] <-  " United-States"
+
+table(`native-country`)
+
+detach(datosAdult)
+
+```
+
+
+```{r}
+
+# Observamos el promedio del atributo 'age'
+
+attach(datosAdult)
+
+mean(age)
+
+# Redondeamos por abajo
+
+floor(mean(age))
+
+
+# Redondeamos por arriba
+
+ceiling(mean(age))
+
+
+# Asignamos la media a una variable
+
+media_age <- ceiling(mean(age))
+
+media_age
+
+
+# Planteamos el histograma del atributo 'age'
+
+hist(age,
+     main = "Histograma del atributo 'age'",
+     xlab = "age",
+     ylab = "frecuencia")
+
+detach(datosAdult)
+
+```
+Podemos observar la curva y el punto en el que los valores son más elevados (+30), a partir del cuál comienza a decrecer por la derecha hasta llegar a las edades por encima de 80.
+
+```{r}
+
+# Observamos los valores únicos de los atributos
+
+attach(datosAdult)
+
+apply(datosAdult, MARGIN = 2, FUN = function(x) length(unique(x)))
+
+detach(datosAdult)
+
+```
+
+
+```{r}
+
+# Realizamos la factorización de los atributos con FOR...LOOP
+
+cols <- c("age","workclass","fnlwgt","education","education-num","marital-status","occupation","relationship","race","sex","capital-gain","capital-loss","hour-per-week","native-country","income")
+
+for (i in cols) {
+  datosAdult[,i] = as.factor(datosAdult[,i])
+}
+
+```
+Realizamos esta factorización para que los gráficos resulten lo más comprensibles posible, de forma que seamos capaces de distinguir las diferencias dentro de las barras correspondientes a un valor de los atributos. Sin esto, todas las barras se verán en un mismo tono gris.
+
+
+## Procesos de análisis del conjunto de datos
+
+```{r}
+
+# Visualizamos la relación de las variables 'education' y 'race'
+
+# Primero almacenamos el número de filas del dataset en una variable
+
+filas <- dim(datosAdult)[1]
+
+
+# Visualizamos con la discretización de los atributos
+
+ggplot(data = datosAdult[1:filas,],
+       aes(x = education,fill = race))+geom_bar()
+
+```
+Podemos observar la predominancia de raza blanca en cuaquiera de los grados de educación presentes en nuestro datatest.
+
+
+```{r}
+
+# Visualizamos la relación de las variables 'education' y 'sex'
+
+ggplot(data = datosAdult[1:filas,],
+       aes(x = education,fill = sex))+geom_bar()
+
+```
+Podemos observar cómo se cumple la relación general entre hombres y mujeres (los hombres doblan en número en la muestra) en todos los nivieles de estudios presentes en nuestro datatest.
+
+
+```{r}
+
+# Creamos una tabla con valores absolutos
+
+t <- table(datosAdult[1:filas, ]$sex,
+           datosAdult[1:filas, ]$income)
+
+t
+
+# Convertimos la tabla a valores relativos
+
+for (i in 1:dim(t)[1]){
+  t[i,] <- t[i,] / sum(t[i,]) * 100
+}
+
+t
+
+# Creamos un gráfico combinado con frecuencias relativas
+
+ggplot(data = datosAdult[1:filas,],
+       aes(x = income, fill = sex)) +
+        geom_bar(position = 'fill') + ylab('Frecuencia')
+
+```
+Podemos observar que, cuando hablamos de ingresos superiores a 50k, la diferencia entre hombres y mujeres se acentúa de forma notable. 
+
+
+```{r}
+
+# Visualizamos la relación de las variables 'education' e 'income'
+
+ggplot(data = datosAdult[1:filas,],
+    aes(x = education,fill = income))+geom_bar()+
+    ggtitle("Histograma de Educación e Ingresos") +
+    xlab("Educacion") +
+    ylab("Ingresos")
+  
+```
+Podemos observar cómo se acentúan las diferencias en los ingresos según los distintos niveles de educación, aunque resulta complicado entender la información del gráfico.
+
+
+```{r}
+unique(datosAdult$education)
+unique(datosAdult$`education-num`)
+```
+
+
+```{r}
+
+# Agrupamos los grados de edicación en tres niveles principales
+
+filas= nrow(datosAdult)
+E18=c(" Preschool"," 1st-4th"," 5th-6th"," 7th-8th"," 9th"," 10th" ," 11th"," 12th")
+E912=c(" HS-grad"," Some-college"," Assoc-acdm"," Assoc-voc")
+E1316=c(" Bachelors"," Masters" ," Prof-school"," Doctorate")
+ for (i in 1:filas){
+if (datosAdult$education[i] %in% E18){
+  datosAdult$education[i]= "E18"
+} else if(datosAdult$education[i] %in% E912){
+  datosAdult$education[i]= "E912"
+} else if (datosAdult$education[i] %in% E1316){
+  datosAdult$education[i]= "E1316"
+}
+}
+table(datosAdult$education)
+```
+```{r}
+
+# Visualizamos de nuevo la relación de las variables 'education' e 'income'
+
+ggplot(data = datosAdult[1:filas,],
+    aes(x = education,fill = income))+geom_bar()+
+    ggtitle("Histograma de Educación e Ingresos") +
+    xlab("Educacion") +
+    ylab("Ingresos")
+  
+```
+En este gráfico podemos observar con mayor facilidad lo comentado anteriormente: según aumenta el nivel de estudios, aumentan las diferencias en los ingresos. 
