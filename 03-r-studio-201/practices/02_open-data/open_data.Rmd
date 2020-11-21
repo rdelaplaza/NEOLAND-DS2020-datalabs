@@ -65,7 +65,7 @@ dim(dataset_gijon)
 # Realizamos una copia del dataset original y con un header personalizado sin caracteres especiales
 datasetHeader <- c("EstacionID",
                    "EstacionName","Lat","Lon",
-                   "Fecha_UTC",
+                   "Fecha_UTC","Periodo",
                    "SO2","NO","NO2","CO","PM10","O3","dd","vv",
                    "TMP","HR","PRB","RS","LL","BEN",
                    "TOL","MXIL","PM25"
