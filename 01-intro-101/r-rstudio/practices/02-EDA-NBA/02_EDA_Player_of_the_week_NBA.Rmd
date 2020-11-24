@@ -1,11 +1,13 @@
 ---
 title: "Lectura y preparación de datos para Data Mining"
 author: "nombre_apellidos_estudiante - NEOLAND"
-date: sys.date
-output: 
-  html_document: 
+date: "sys.date"
+output:
+  html_document:
     highlight: tango
     theme: spacelab
+    toc: yes
+  pdf_document:
     toc: yes
 ---
 

@@ -250,6 +250,8 @@ Siete años es el número de años que más veces se repite entre que salen eleg
 nba$Height <- as.character(nba$Height)
 
 
+
+
 # Utilizamos un bucle FOR...LOOP para diferenciar las alturas que están expresadas en cm de las que están en pies y pulgadas.
 
 # Las que están en 'cm', nos quedamos solo con el número y las que tienen un '-' (pies y pulgadas), las pasamos a 'cm':
@@ -263,9 +265,9 @@ for (i in 1:nrow(nba)){
   }
 }
 
+?trimws
 ?grepl
 ?sub
-?trimws
 ?strsplit
 
 
@@ -292,8 +294,6 @@ El peso de los jugadores está expresada en libras y kg. Convertir el peso expre
 
 
 ```{r}
-
-nba<-read.csv("~/GitHub/NEOLAND-DS2020-datalabs/NEOLAND-DS2020-datalabs/01-intro-101/r-rstudio/practices/02-EDA-NBA/NBA_player_of_the_week.csv",header = TRUE)
 
 # Como el peso ahora mismo es un factor, lo volvemos a cambiar a su estado inicial: 'character'.
 
@@ -355,6 +355,21 @@ if (nba$Position[i] %in% forward){
   nba$Position[i]= "Guard"
 }
 }
+
+
+# OTRA FORMA DE HACERLO:
+
+library(plyr)
+
+nba$Position<-mapvalues(nba$Position, from = c("F-C", "FC","G-F","GF"), to = c("F", "F","G","G"))
+
+nba$Position<-mapvalues(nba$Position, from = c("F", "G","PG","SG","SF","PF","C"), to = c("Forward", "Guard","Point Guard","Shooting Guard","Small Forward","Power Forward","Center"))
+
+position.sort <- sort( table(nba$Position), decreasing=TRUE )
+
+position.top <- position.sort[1]
+  position.top.name <- names( position.top )
+  position.top.name
 
 ```
 
@@ -578,11 +593,12 @@ nba.unique$Altura = as.factor(nba.unique$Altura)
 # Después visualizamos los datos en forma de 'boxplot' utilizando las funciones de la librería 'ggplot2' que instalamos al inicio del ejercicio:
 
 ggplot(data = nba.unique,
-    aes(x = Altura, y = Weight, fill = Altura)) +
+    aes(x = Altura, y = Weight)) +
     geom_boxplot() +
     ggtitle("Peso segun altura del jugador") +
     xlab("Altura") +
     ylab("Peso")
+
 
 ```
 Podemos observar que existe claramente una correlación entre el peso y la altura de los jugadores, lo que entra dentro de la lógica. Podemos observa, además, que existen valores atípicos tanto por encima como, en el caso de los jugadores más bajos, por debajo. Sería conveniente hacer una limpieza de estos valores para obtener unos resultados más consolidados.
