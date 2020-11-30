@@ -274,10 +274,236 @@ dweeks(3)
 dyears(1)
 ```
  
+### Realizamos operaciones con las periodos, intervalos
+
+```{r}
+2 * dyears(1)
+```
+
+
+```{r}
+dyears(1) + dweeks(12) + dhours(15)
+```
+
+
+```{r}
+today()
+now()
+```
+
+
+```{r}
+last_year <- today() - dyears(1)
+last_year
+```
+
+```{r}
+dweeks(dyears(1))
+dyears(1)
+years(1)
+```
+
+```{r}
+dyears(1) == years(1)
+```
+
+```{r}
+tomorrow <- today() + ddays(1)
+tomorrow
+```
+
+## Conversiones de zonas horarias
+
+```{r}
+one_pm <- ymd_hms(
+  "2020-03-28 13:00:25",
+  tz = "Europe/Madrid"
+)
+one_pm
+```
+
+
+```{r}
+one_pm <- ymd_hms(
+  "2020-03-29 13:00:25",
+  tz = "Europe/Madrid"
+)
+one_pm
+```
+
+```{r}
+one_pm + ddays(1)
+```
+
+
+#◘ Observamos el cambio de hora
+
+
+```{r}
+one_pm <- ymd_hms(
+  "2020-10-24 13:00:25",
+  tz = "Europe/Madrid"
+)
+one_pm
+```
+
+
+
+```{r}
+one_pm <- ymd_hms(
+  "2020-10-25 13:00:25",
+  tz = "Europe/Madrid"
+)
+one_pm
+```
+
+
+```{r}
+flights_dt %>%
+  filter(arr_time < dep_time)
+```
+
+
+```{r}
+# transformamos los datos creando una nueva columna overnight
+flights_dt <- flights_dt %>%
+  mutate(
+    overnight = arr_time < dep_time,
+    arr_time = arr_time + days(overnight * 1),
+    sched_arr_time = sched_arr_time + days(overnight * 1)
+  )
+```
+
+
+```{r}
+# Comprobamos que ya no existen estas diferencias
+flights_dt %>%
+  filter(overnight, arr_time < dep_time)
+```
+
+
+```{r}
+# comprobar que efectivamente el vuelo de arr_time haya cambiado
+flights_dt %>%
+  filter(origin == "EWR" & dest == "BQN")
+```
+
+
+
+### Intervalos
+
+```{r}
+years(1) / days(1)
+```
+
+
+
+```{r}
+next_year <- today() + years(1)
+next_year
+```
+
+
+```{r}
+(today() %--% next_year) / ddays(1)
+```
+
+```{r}
+(today() %--% next_year) / dweeks(1)
+```
+
+```{r}
+(today() %--% next_year) / months(1)
+```
+
+## Time Zones
+
+```{r}
+Sys.timezone()
+Sys.time()
+Sys.Date()
+```
+
+```{r}
+
+length(OlsonNames())
+```
+
+```{r}
+head(OlsonNames())
+```
+
+
+```{r}
+a <-ymd_hms("2020-11-30 12:00:00", tz = "Europe/Madrid")
+b <-ymd_hms("2020-11-30 22:00:00", tz = "Australia/Sydney")
+c <-ymd_hms("2020-11-30 06:00:00", tz = "America/New_York")
+a
+b
+c
+
+```
+
+```{r}
+a - b
+b - c
+a - c
+```
 
 
 
 
+
+```{r}
+a <-ymd_hms("2020-11-30 12:00:00", tz = "Europe/Madrid")
+b <-ymd_hms("2020-11-30 12:00:00", tz = "Australia/Sydney")
+c <-ymd_hms("2020-11-30 12:00:00", tz = "America/New_York")
+a
+b
+c
+```
+
+```{r}
+a - b
+```
+
+
+```{r}
+b - c
+```
+ 
+
+```{r}
+a - c
+```
+
+
+```{r}
+d <-c(a,b,c)
+d
+```
+
+
+```{r}
+# Con with_tz me aplica el cambio a la fecha y hora al tz
+prueba <- with_tz(d, tzone = "Asia/Tokyo")
+prueba
+```
+
+
+```{r}
+prueba - d
+```
+
+
+El resultado nos devolverá cero porque aplica al cambio de zona horaria
+
+
+```{r}
+# con force_tz cambia la etiqueta tz pero no el horario y fecha
+prueba_b <-  force_tz(d, tzone = "Asia/Tokyo")
+prueba_b
+```
 
 
 
