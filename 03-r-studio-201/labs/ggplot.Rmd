@@ -126,7 +126,29 @@ ggplot(data = mpg) +
 
 ggplot(data = mpg) +
   geom_smooth(mapping = aes(x = displ, y = hwy), show.legend = T)
+```
 
+
+```{r smooth, message=FALSE, warning=FALSE, paged.print=FALSE}
+attach(mpg)
+loess(hwy ~ displ)
+```
+
+```{r}
+a <- loess(hwy ~ displ)
+a
+```
+
+
+```{r}
+residuales <- a$residuals
+residuales
+```
+
+
+```{r}
+ggplot(data = residuales) +
+  geom_smooth(mapping = aes(x = a$x, y = a$y))
 ```
 
 
