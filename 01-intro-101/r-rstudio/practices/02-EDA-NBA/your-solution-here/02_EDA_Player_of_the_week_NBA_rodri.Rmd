@@ -139,7 +139,7 @@ conf<-(nba$Conference)
 ```{r}
 conf
 ```
-Podemos observar en la lista creada que la división de la NBA en conferencias no existía desde 1984, si no que aparece en algún momento entre los años 1985 y 2018. Por ello, vamos a sustituir los valores vacíos de los primeros añor por NA.
+Podemos observar en la lista creada que la división de la NBA en conferencias no existía desde 1984, si no que aparece en algún momento entre los años 1985 y 2018. Por ello, vamos a sustituir los valores vacíos de los primeros años por NA.
 
 Antes de esto, haremos una copia de seguridad de nuestro dataset por si incurrimos en algún error durente este proceso, que tengamos la posibilidad de volver sobre los datos originales.
 
